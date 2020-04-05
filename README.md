@@ -1,2 +1,1 @@
-# DungeonRogueLike
-Roguelike Dungeon Crawler
+Repository for MA
