@@ -47,7 +47,6 @@ public class SensorDataInput implements SensorEventListener {
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
     }
 
     @Override
@@ -57,11 +56,11 @@ public class SensorDataInput implements SensorEventListener {
         else if(event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
             magnetometerOutput = event.values;
         if(accelerometerOutput != null && magnetometerOutput != null) {
-            float[] R = new float[9];
-            float[] I = new float[9];
-            boolean success = SensorManager.getRotationMatrix(R, I, accelerometerOutput, magnetometerOutput);
+            float[] rotation = new float[9];    //3x3 Matrix for the rotation
+            float[] inclination = new float[9]; //3x3 Matrix for the inclination
+            boolean success = SensorManager.getRotationMatrix(rotation, inclination, accelerometerOutput, magnetometerOutput);
             if(success) {
-                SensorManager.getOrientation(R, orientation);
+                SensorManager.getOrientation(rotation, orientation);
                 if(startOrientation == null) {
                     startOrientation = new float[orientation.length];
                     System.arraycopy(orientation, 0, startOrientation, 0, orientation.length);
