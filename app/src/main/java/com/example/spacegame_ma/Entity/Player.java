@@ -20,6 +20,10 @@ public class Player implements Entity {
     private SensorDataInput orientationData;
     private long current_time;
 
+    //shaky hand factor
+    private int shfX = 15;
+    private int shfY = 25;
+
     public Player(Rect rect, int color){
         this.rect = rect;
         this.color = color;
@@ -58,9 +62,7 @@ public class Player implements Entity {
         } else if (rect.left - oldLeft < -5) {
             state = 2;
         }
-
     }
-
 
     public Point move(){
         if(current_time < Constants.INIT_TIME){
@@ -70,14 +72,37 @@ public class Player implements Entity {
         current_time = System.currentTimeMillis();
 
         if(orientationData.getOrientation() != null && orientationData.getStartOrientation() != null){
-            float roll = orientationData.getOrientation()[2] - orientationData.getStartOrientation()[2];
-            float pitch = orientationData.getOrientation()[1] - orientationData.getStartOrientation()[1];
 
-            float speedX = 2* roll * Constants.SCREEN_WIDTH/500f;
-            float speedY = pitch * Constants.SCREEN_HEIGHT/350f;
+            float xOrientation = orientationData.getOrientation()[2];
+            float xStartOrientation = orientationData.getStartOrientation()[2];
 
-            playerPosition.x += Math.abs(speedX * passedTime) > 15 ? speedX * passedTime : 0;
-            playerPosition.y -= Math.abs(speedY * passedTime) > 25 ? speedY * passedTime : 0;
+            float yOrientation = orientationData.getOrientation()[1];
+            float yStartOrientation = orientationData.getStartOrientation()[1];
+
+            float roll = (xOrientation - xStartOrientation);
+            float pitch = (yOrientation - yStartOrientation);
+
+            float speedX = 2*roll * Constants.SCREEN_WIDTH/500f;
+            float speedY = pitch * Constants.SCREEN_HEIGHT/600f;
+
+
+            //Display is up
+            if(xOrientation > -1.5 && xOrientation < 1.5){
+                playerPosition.y -= Math.abs(speedY * passedTime) > shfY ? speedY * passedTime : 0;
+            }
+            //Display down
+            else if(xOrientation <= -1.5 || xOrientation >= 1.5){
+                if (xStartOrientation <= -1.5 && xOrientation >= 1.5){
+                    xOrientation -= 6;
+                }else if(xStartOrientation >= 1.5 && xOrientation <= -1.5){
+                    xOrientation += 6;
+                }
+                roll = (xOrientation - xStartOrientation);
+                speedX = 2*roll * Constants.SCREEN_WIDTH / 500f;
+
+                playerPosition.y += Math.abs(speedY * passedTime) > shfY ? speedY * passedTime : 0;
+            }
+            playerPosition.x += Math.abs(speedX * passedTime) > shfX ? speedX * passedTime : 0;
         }
 
         if(playerPosition.x < 0){

@@ -10,9 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".UI.GameActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.noActionBar"></activity>
         <activity
             android:name=".UI.MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.noActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

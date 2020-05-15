@@ -8,6 +8,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.example.spacegame_ma.Controls.SensorDataInput;
 import com.example.spacegame_ma.Logic.Constants;
 import com.example.spacegame_ma.R;
 

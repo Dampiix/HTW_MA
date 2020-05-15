@@ -14,6 +14,7 @@ public class SensorDataInput implements SensorEventListener {
     private Sensor accelerometer;
     private Sensor magnetometer;
 
+
     private float[] accelerometerOutput;
     private float[] magnetometerOutput;
 
@@ -41,7 +42,7 @@ public class SensorDataInput implements SensorEventListener {
         manager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
     }
 
-    public void pause() {
+    public void unregister() {
         manager.unregisterListener(this);
     }
 
@@ -58,12 +59,18 @@ public class SensorDataInput implements SensorEventListener {
         if(accelerometerOutput != null && magnetometerOutput != null) {
             float[] rotation = new float[9];    //3x3 Matrix for the rotation
             float[] inclination = new float[9]; //3x3 Matrix for the inclination
-            boolean success = SensorManager.getRotationMatrix(rotation, inclination, accelerometerOutput, magnetometerOutput);
-            if(success) {
+            boolean successful = SensorManager.getRotationMatrix(rotation, inclination, accelerometerOutput, magnetometerOutput);
+            if(successful) {
                 SensorManager.getOrientation(rotation, orientation);
+
+                //assign first data as start orientation
                 if(startOrientation == null) {
                     startOrientation = new float[orientation.length];
                     System.arraycopy(orientation, 0, startOrientation, 0, orientation.length);
+
+                    //System.out.println("StartY " + startOrientation[1]);
+                    System.out.println("StartX " + startOrientation[2]);
+
                 }
             }
         }

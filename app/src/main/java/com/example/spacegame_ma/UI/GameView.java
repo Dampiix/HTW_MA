@@ -54,14 +54,10 @@ public class GameView extends SurfaceView implements Runnable{
 
     public void draw(){
         if(getHolder().getSurface().isValid()){
-            System.out.println(("is valid"));
             Canvas canvas = getHolder().lockCanvas();
             canvas.drawColor(Color.WHITE);
             player.draw(canvas);
             getHolder().unlockCanvasAndPost(canvas);
-
-        }else{
-            System.out.println(("is not valid"));
         }
 
 
