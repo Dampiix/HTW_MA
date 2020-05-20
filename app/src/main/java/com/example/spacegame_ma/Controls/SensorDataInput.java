@@ -60,6 +60,7 @@ public class SensorDataInput implements SensorEventListener {
             float[] rotation = new float[9];    //3x3 Matrix for the rotation
             float[] inclination = new float[9]; //3x3 Matrix for the inclination
             boolean successful = SensorManager.getRotationMatrix(rotation, inclination, accelerometerOutput, magnetometerOutput);
+
             if(successful) {
                 SensorManager.getOrientation(rotation, orientation);
 

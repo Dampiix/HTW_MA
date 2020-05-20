@@ -21,8 +21,12 @@ public class Player implements Entity {
     private long current_time;
 
     //shaky hand factor
-    private int shfX = 15;
-    private int shfY = 25;
+    private int shfX = 5;
+    private int shfY = 5;
+
+    //
+    private float sfX = 1000f;
+    private float sfY = 1000f;
 
     public Player(Rect rect, int color){
         this.rect = rect;
@@ -82,29 +86,57 @@ public class Player implements Entity {
             float roll = (xOrientation - xStartOrientation);
             float pitch = (yOrientation - yStartOrientation);
 
-            float speedX = 2*roll * Constants.SCREEN_WIDTH/500f;
-            float speedY = pitch * Constants.SCREEN_HEIGHT/600f;
+            float speedX = 2* roll * Constants.SCREEN_WIDTH/sfX;
+            float speedY = pitch * Constants.SCREEN_HEIGHT/sfY;
 
 
-            //Display is up
-            if(xOrientation > -1.5 && xOrientation < 1.5){
+            //if start = display up
+            if (xStartOrientation > -1.5 && xStartOrientation < 1.5){
+                //  if current = display up
+                if(xOrientation > -1.5 && xOrientation < 1.5){
+
+                }
+                //else if current = display down
+                else if(xOrientation <= -1.5 || xOrientation >= 1.5){
+                    float absOrientationY = Math.abs(yOrientation);
+                    int posORneg = (int) (yOrientation/absOrientationY)* (-1) * 3;
+                    yOrientation = (yOrientation + posORneg) * (-1);
+
+                    if (xOrientation < 0){
+                        xOrientation += 3;
+                    }else if(xOrientation > 0){
+                        xOrientation -= 3;
+                    }
+                    roll = (xOrientation - xStartOrientation);
+                    pitch = (yOrientation - yStartOrientation);
+                    speedX = roll * Constants.SCREEN_WIDTH/sfX;
+                    speedY = pitch * Constants.SCREEN_HEIGHT/sfY;
+                }
                 playerPosition.y -= Math.abs(speedY * passedTime) > shfY ? speedY * passedTime : 0;
             }
-            //Display down
-            else if(xOrientation <= -1.5 || xOrientation >= 1.5){
-                if (xStartOrientation <= -1.5 && xOrientation >= 1.5){
-                    xOrientation -= 6;
-                }else if(xStartOrientation >= 1.5 && xOrientation <= -1.5){
-                    xOrientation += 6;
+            //else if start = display down
+            else if (xStartOrientation <= -1.5 || xStartOrientation >= 1.5){
+                //  if current = display up
+                if(xOrientation > -1.5 && xOrientation < 1.5){
+                    playerPosition.y -= Math.abs(speedY * passedTime) > shfY ? speedY * passedTime : 0;
                 }
-                roll = (xOrientation - xStartOrientation);
-                speedX = 2*roll * Constants.SCREEN_WIDTH / 500f;
+                //  else if current = display down
+                else if(xOrientation <= -1.5 || xOrientation >= 1.5){
+                    if (xStartOrientation <= -1.5 && xOrientation >= 1.5){
+                        xOrientation -= 6;
+                    }else if(xStartOrientation >= 1.5 && xOrientation <= -1.5){
+                        xOrientation += 6;
+                    }
+                    roll = (xOrientation - xStartOrientation);
+                    speedX = roll * Constants.SCREEN_WIDTH / sfX;
 
-                playerPosition.y += Math.abs(speedY * passedTime) > shfY ? speedY * passedTime : 0;
+                    playerPosition.y += Math.abs(speedY * passedTime) > shfY ? speedY * passedTime : 0;
+                }
             }
             playerPosition.x += Math.abs(speedX * passedTime) > shfX ? speedX * passedTime : 0;
-        }
 
+            System.out.println("X: "+xOrientation + " Y: "+yOrientation);
+        }
         if(playerPosition.x < 0){
             playerPosition.x = 0;
         }else if(playerPosition.x > Constants.SCREEN_WIDTH){
@@ -116,12 +148,8 @@ public class Player implements Entity {
             playerPosition.y = (int) Constants.SCREEN_HEIGHT;
         }
 
-
-
-
         return playerPosition;
     }
-
 
 
 
