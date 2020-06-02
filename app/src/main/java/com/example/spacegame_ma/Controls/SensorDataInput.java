@@ -69,9 +69,6 @@ public class SensorDataInput implements SensorEventListener {
                     startOrientation = new float[orientation.length];
                     System.arraycopy(orientation, 0, startOrientation, 0, orientation.length);
 
-                    //System.out.println("StartY " + startOrientation[1]);
-                    System.out.println("StartX " + startOrientation[2]);
-
                 }
             }
         }

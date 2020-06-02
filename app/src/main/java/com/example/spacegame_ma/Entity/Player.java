@@ -24,7 +24,7 @@ public class Player implements Entity {
     private int shfX = 5;
     private int shfY = 5;
 
-    //
+    //speed factor
     private float sfX = 1000f;
     private float sfY = 1000f;
 
@@ -86,7 +86,7 @@ public class Player implements Entity {
             float roll = (xOrientation - xStartOrientation);
             float pitch = (yOrientation - yStartOrientation);
 
-            float speedX = 2* roll * Constants.SCREEN_WIDTH/sfX;
+            float speedX = 2 * roll * Constants.SCREEN_WIDTH/sfX;
             float speedY = pitch * Constants.SCREEN_HEIGHT/sfY;
 
 
@@ -94,7 +94,6 @@ public class Player implements Entity {
             if (xStartOrientation > -1.5 && xStartOrientation < 1.5){
                 //  if current = display up
                 if(xOrientation > -1.5 && xOrientation < 1.5){
-
                 }
                 //else if current = display down
                 else if(xOrientation <= -1.5 || xOrientation >= 1.5){
@@ -103,13 +102,13 @@ public class Player implements Entity {
                     yOrientation = (yOrientation + posORneg) * (-1);
 
                     if (xOrientation < 0){
-                        xOrientation += 3;
+                        xOrientation = (xOrientation +3) * -1;
                     }else if(xOrientation > 0){
-                        xOrientation -= 3;
+                        xOrientation = (xOrientation- 3) * -1;
                     }
                     roll = (xOrientation - xStartOrientation);
                     pitch = (yOrientation - yStartOrientation);
-                    speedX = roll * Constants.SCREEN_WIDTH/sfX;
+                    speedX = 2 * roll * Constants.SCREEN_WIDTH/sfX;
                     speedY = pitch * Constants.SCREEN_HEIGHT/sfY;
                 }
                 playerPosition.y -= Math.abs(speedY * passedTime) > shfY ? speedY * passedTime : 0;
@@ -137,6 +136,9 @@ public class Player implements Entity {
 
             System.out.println("X: "+xOrientation + " Y: "+yOrientation);
         }
+
+
+        //restrict player movement
         if(playerPosition.x < 0){
             playerPosition.x = 0;
         }else if(playerPosition.x > Constants.SCREEN_WIDTH){

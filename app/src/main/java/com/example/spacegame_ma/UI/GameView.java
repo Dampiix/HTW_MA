@@ -16,14 +16,12 @@ public class GameView extends SurfaceView implements Runnable{
     private Thread thread;
     private boolean isRunning;
     private Player player;
-    //private Point playerPos;
 
 
     public GameView(Context context) {
         super(context);
         init(context);
         player = new Player(new Rect(100, 100, 200, 200), Color.rgb(255, 0, 0));
-        //playerPos = new Point(Constants.SCREEN_WIDTH / 2, 3 * Constants.SCREEN_HEIGHT / 4);
         player.update(player.move());
 
     }
@@ -43,14 +41,11 @@ public class GameView extends SurfaceView implements Runnable{
             sleep();
 
         }
-
     }
 
     public void update(){
         player.update(player.move());
-
     }
-
 
     public void draw(){
         if(getHolder().getSurface().isValid()){
@@ -59,9 +54,6 @@ public class GameView extends SurfaceView implements Runnable{
             player.draw(canvas);
             getHolder().unlockCanvasAndPost(canvas);
         }
-
-
-
 
     }
     private void sleep(){
@@ -75,7 +67,6 @@ public class GameView extends SurfaceView implements Runnable{
 
 
     public void resume(){
-
         isRunning = true;
         thread = new Thread(this);
         thread.start();
