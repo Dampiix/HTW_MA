@@ -1,38 +1,41 @@
 package com.example.spacegame_ma.Entity;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 
-import com.example.spacegame_ma.Logic.Constants;
-
-import java.util.Random;
-
-public class Enemy implements Entity {
+public class Bullet implements Entity{
 
     int x,y;
-    int width = 100;
-    int height = 100;
-    private Rect rect;
+    int width = 50;
+    int height = 50;
     private int color;
-    private float speed;
+    private Rect rect;
+    int speed = 8;
+    private Point bulletPosition;
+    Player player;
 
-    private Point enemyPosition;
-    private Random random;
+    public Bullet(int posX, int posY, int color){
 
+        this.color = color;
 
-    public Enemy(float speed){
+        this.x = posX;
+        this.y = posY;
 
-        color = Color.rgb(255, 0, 0);
-        this.speed = speed;
-        random = new Random();
-        x = random.nextInt(Constants.SCREEN_WIDTH);
-        y =  0 - ((int)0.2*Constants.SCREEN_HEIGHT);
-        enemyPosition = new Point(x,y);
 
         rect = new Rect(-width, -height, -2*width, -2*height);
+    }
+
+    @Override
+    public Point move(){
+        y -= speed;
+        return new Point(x,y);
+    }
+
+    @Override
+    public Rect collisionShape() {
+        return rect;
     }
 
     @Override
@@ -41,7 +44,6 @@ public class Enemy implements Entity {
         paint.setColor(color);
         canvas.drawRect(rect, paint);
     }
-
 
     public void update(Point point) {
         float oldLeft = rect.left;
@@ -61,14 +63,4 @@ public class Enemy implements Entity {
         }
     }
 
-    @Override
-    public Point move() {
-        enemyPosition.y += speed;
-        return enemyPosition;
-    }
-
-    @Override
-    public Rect collisionShape() {
-        return new Rect(enemyPosition.x - (width/2), enemyPosition.y -(height/2), enemyPosition.x + (width/2), enemyPosition.y + (height/2));
-    }
 }

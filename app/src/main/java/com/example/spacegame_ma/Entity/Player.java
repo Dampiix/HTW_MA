@@ -1,21 +1,23 @@
 package com.example.spacegame_ma.Entity;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.view.MotionEvent;
 
 import com.example.spacegame_ma.Controls.SensorDataInput;
-import com.example.spacegame_ma.Interfaces.Entity;
 import com.example.spacegame_ma.Logic.Constants;
+import com.example.spacegame_ma.UI.GameView;
 
 public class Player implements Entity {
 
-    int x,y;
+    int width = 100;
+    int height = 100;
     private int color;
     private Rect rect;
-    private Point playerPosition = new Point(Constants.SCREEN_WIDTH / 2, 3 * Constants.SCREEN_HEIGHT / 4);;
+    public Point playerPosition = new Point(Constants.SCREEN_WIDTH / 2, 3 * Constants.SCREEN_HEIGHT / 4);;
+    private GameView gameView;
 
     private SensorDataInput orientationData;
     private long current_time;
@@ -28,16 +30,18 @@ public class Player implements Entity {
     private float sfX = 1000f;
     private float sfY = 1000f;
 
-    public Player(Rect rect, int color){
-        this.rect = rect;
-        this.color = color;
+    public Player(GameView gameView){
+
+        color = Color.rgb(0, 0, 255);
+        this.gameView = gameView;
+        rect = new Rect(-width, -height, -2*width, -2*height);
 
         orientationData = new SensorDataInput();
         orientationData.register();
         current_time = System.currentTimeMillis();
 
     }
-    // 
+
     @Override
     public void draw(Canvas canvas) {
         Paint paint = new Paint();
@@ -45,10 +49,6 @@ public class Player implements Entity {
         canvas.drawRect(rect, paint);
     }
 
-    @Override
-    public void update() {
-
-    }
 
     public void update(Point point) {
         float oldLeft = rect.left;
@@ -134,7 +134,7 @@ public class Player implements Entity {
             }
             playerPosition.x += Math.abs(speedX * passedTime) > shfX ? speedX * passedTime : 0;
 
-            System.out.println("X: "+xOrientation + " Y: "+yOrientation);
+            //System.out.println("X: "+xOrientation + " Y: "+yOrientation);
         }
 
 
@@ -153,6 +153,10 @@ public class Player implements Entity {
         return playerPosition;
     }
 
+    @Override
+    public Rect collisionShape() {
+        return new Rect(playerPosition.x -(width/2),playerPosition.y-(height/2),playerPosition.x+(width/2),playerPosition.y+(width/2));
+    }
 
 
 }
