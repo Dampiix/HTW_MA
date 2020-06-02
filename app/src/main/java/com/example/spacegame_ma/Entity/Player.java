@@ -37,7 +37,7 @@ public class Player implements Entity {
         current_time = System.currentTimeMillis();
 
     }
-
+    // 
     @Override
     public void draw(Canvas canvas) {
         Paint paint = new Paint();
