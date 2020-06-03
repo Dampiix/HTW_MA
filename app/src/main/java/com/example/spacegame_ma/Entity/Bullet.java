@@ -1,6 +1,7 @@
 package com.example.spacegame_ma.Entity;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -12,13 +13,11 @@ public class Bullet implements Entity{
     int height = 50;
     private int color;
     private Rect rect;
-    int speed = 8;
-    private Point bulletPosition;
-    Player player;
+    public int speed = 1;
 
-    public Bullet(int posX, int posY, int color){
+    public Bullet(int posX, int posY){
 
-        this.color = color;
+        color = Color.rgb(255, 175, 0);
 
         this.x = posX;
         this.y = posY;

@@ -7,8 +7,8 @@ import android.graphics.Point;
 import android.graphics.Rect;
 
 import com.example.spacegame_ma.Controls.SensorDataInput;
-import com.example.spacegame_ma.Logic.Constants;
-import com.example.spacegame_ma.UI.GameView;
+import com.example.spacegame_ma.Constants.Constants;
+import com.example.spacegame_ma.GameLogic.GameView;
 
 public class Player implements Entity {
 
@@ -32,14 +32,13 @@ public class Player implements Entity {
 
     public Player(GameView gameView){
 
-        color = Color.rgb(0, 0, 255);
+        color = Color.rgb(0,191,255);
         this.gameView = gameView;
         rect = new Rect(-width, -height, -2*width, -2*height);
 
         orientationData = new SensorDataInput();
         orientationData.register();
         current_time = System.currentTimeMillis();
-
     }
 
     @Override

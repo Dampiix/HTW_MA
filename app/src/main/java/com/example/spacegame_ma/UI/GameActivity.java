@@ -2,13 +2,10 @@ package com.example.spacegame_ma.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.hardware.Sensor;
 import android.os.Bundle;
-import android.view.Window;
 import android.view.WindowManager;
 
-import com.example.spacegame_ma.Controls.SensorDataInput;
-import com.example.spacegame_ma.R;
+import com.example.spacegame_ma.GameLogic.GameView;
 
 public class GameActivity extends AppCompatActivity {
 

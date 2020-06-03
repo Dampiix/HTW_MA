@@ -1,4 +1,4 @@
-package com.example.spacegame_ma.Logic;
+package com.example.spacegame_ma.Constants;
 
 import android.content.Context;
 

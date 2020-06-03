@@ -6,7 +6,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-import com.example.spacegame_ma.Logic.Constants;
+import com.example.spacegame_ma.Constants.Constants;
 
 public class SensorDataInput implements SensorEventListener {
 

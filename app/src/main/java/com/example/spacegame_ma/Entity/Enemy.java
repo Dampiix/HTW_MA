@@ -6,7 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 
-import com.example.spacegame_ma.Logic.Constants;
+import com.example.spacegame_ma.Constants.Constants;
 
 import java.util.Random;
 

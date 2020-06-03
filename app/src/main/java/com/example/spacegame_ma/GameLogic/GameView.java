@@ -1,9 +1,8 @@
-package com.example.spacegame_ma.UI;
+package com.example.spacegame_ma.GameLogic;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
@@ -11,12 +10,11 @@ import android.view.SurfaceView;
 import com.example.spacegame_ma.Entity.Bullet;
 import com.example.spacegame_ma.Entity.Enemy;
 import com.example.spacegame_ma.Entity.Player;
-import com.example.spacegame_ma.Logic.Constants;
+import com.example.spacegame_ma.Constants.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GameView extends SurfaceView implements Runnable{
 
@@ -31,13 +29,17 @@ public class GameView extends SurfaceView implements Runnable{
     private int enemyTimer;
     private Rect bulletShape;
 
+    private int score = 0;
+    private int highscore;
+    private boolean gameOver = false;
+
     private Random random;
 
 
     public GameView(Context context) {
         super(context);
         init(context);
-        player = new Player(this);
+        spawnPlayer();
 
         player.update(player.move());
         bullets = new ArrayList<>();
@@ -56,6 +58,8 @@ public class GameView extends SurfaceView implements Runnable{
         System.out.println(("init"));
     }
 
+
+
     @Override
     public void run() {
 
@@ -70,22 +74,24 @@ public class GameView extends SurfaceView implements Runnable{
     }
 
     public void update(){
+        spawnEnemy();
         player.update(player.move());
         List<Bullet> offscreenBullets = new ArrayList<>();
         List<Enemy> offscreenEnemies = new ArrayList<>();
 
-        if(isGameOver()){
+        if(gameOver){
             isRunning = false;
         }
 
         for (Bullet bullet : bullets){
 
-            bulletShape = new Rect(bullet.move().x-25, bullet.move().y -25, bullet.move().x+25,bullet.move().y+25);
             bullet.update(bullet.move());
-
+            bulletShape = new Rect(bullet.move().x-25, bullet.move().y -25, bullet.move().x+25,bullet.move().y+25);
             for(Enemy enemy : enemies){
-                if(Rect.intersects(bulletShape, enemy.collisionShape())){
+                if(enemyHit(bullet, enemy)){
                     enemy.move().y = Constants.SCREEN_HEIGHT +100;
+                    score++;
+                    compareScore(score);
                     offscreenBullets.add(bullet);
                 }
             }
@@ -99,7 +105,7 @@ public class GameView extends SurfaceView implements Runnable{
                 offscreenEnemies.add(enemy);
             }
             enemy.update((enemy.move()));
-
+            isGameOver(player, enemy);
         }
         for(Enemy enemy : offscreenEnemies){
             enemies.remove((enemy));
@@ -116,7 +122,7 @@ public class GameView extends SurfaceView implements Runnable{
     public void draw(){
         if(getHolder().getSurface().isValid()){
             Canvas canvas = getHolder().lockCanvas();
-            canvas.drawColor(Color.WHITE);
+            canvas.drawColor(Color.rgb(10,10,44));
 
             for (Bullet bullet : bullets){
                 bullet.draw(canvas);
@@ -157,23 +163,22 @@ public class GameView extends SurfaceView implements Runnable{
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
-
         if(cooldown<=0){
             newBullet();
-            spawnEnemy();
             cooldown = 10;
         }
-
         return true;
     }
 
 
-    public void newBullet(){
-        Bullet bullet = new Bullet(player.move().x, player.move().y, Color.rgb(255, 175, 0));
+    private void newBullet(){
+        Bullet bullet = new Bullet(player.move().x, player.move().y);
         bullets.add(bullet);
+        System.out.println(bullet.speed);
+
     }
 
-    public void spawnEnemy(){
+    private void spawnEnemy(){
         if (enemyTimer <= 0){
             Enemy enemy = new Enemy(4);
 
@@ -182,22 +187,37 @@ public class GameView extends SurfaceView implements Runnable{
                 maxEnemyTimer--;
             }
             enemySpeed += 0.1f;
-            System.out.println(maxEnemyTimer);
             enemyTimer = maxEnemyTimer;
         }
-
-
     }
 
-    public boolean isGameOver(){
-        //gameover if player hit by enemy
-        boolean gameOver = false;
-        for (Enemy enemy : enemies){
+    private void spawnPlayer(){
+        player = new Player(this);
+    }
 
-            if(Rect.intersects(player.collisionShape(),enemy.collisionShape())){
-                gameOver = true;
-            }
+    public boolean enemyHit(Bullet b, Enemy e){
+        bulletShape = new Rect(b.move().x-25, b.move().y -25, b.move().x+25,b.move().y+25);
+        if(Rect.intersects(bulletShape, e.collisionShape())){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
+    public boolean isGameOver(Player p, Enemy e){
+        //gameover if player hit by enemy
+        if(Rect.intersects(p.collisionShape(),e.collisionShape())){
+            gameOver = true;
+            System.out.println("HIGHSCORE: " + highscore);
         }
         return gameOver;
+    }
+
+    public int compareScore(int score){
+        if(score >= highscore){
+            highscore = score;
+        }
+        return highscore;
     }
 }
