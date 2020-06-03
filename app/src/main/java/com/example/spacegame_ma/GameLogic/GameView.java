@@ -48,17 +48,12 @@ public class GameView extends SurfaceView implements Runnable{
         random = new Random();
 
         enemyTimer = maxEnemyTimer;
-
-
-
     }
 
     public void init(Context context){
         Constants.CURRENT_CONTEXT = context;
         System.out.println(("init"));
     }
-
-
 
     @Override
     public void run() {
@@ -83,57 +78,75 @@ public class GameView extends SurfaceView implements Runnable{
             isRunning = false;
         }
 
-        for (Bullet bullet : bullets){
+        try{
+            for (Bullet bullet : bullets){
 
-            bullet.update(bullet.move());
-            bulletShape = new Rect(bullet.move().x-25, bullet.move().y -25, bullet.move().x+25,bullet.move().y+25);
-            for(Enemy enemy : enemies){
-                if(enemyHit(bullet, enemy)){
-                    enemy.move().y = Constants.SCREEN_HEIGHT +100;
-                    score++;
-                    compareScore(score);
+                bullet.update(bullet.move());
+                bulletShape = new Rect(bullet.move().x-25, bullet.move().y -25, bullet.move().x+25,bullet.move().y+25);
+                for(Enemy enemy : enemies){
+                    if(enemyHit(bullet, enemy)){
+                        enemy.move().y = Constants.SCREEN_HEIGHT +100;
+                        score++;
+                        compareScore(score);
+                        offscreenBullets.add(bullet);
+                    }
+                }
+                if(bullet.move().y < 0){
                     offscreenBullets.add(bullet);
                 }
             }
-            if(bullet.move().y < 0){
-                offscreenBullets.add(bullet);
+            for(Bullet bullet : offscreenBullets){
+                bullets.remove(bullet);
             }
+        }catch(Exception e){
+            System.out.println("ERROR: something went wrong");
         }
 
-        for (Enemy enemy : enemies){
-            if(enemy.move().y > Constants.SCREEN_HEIGHT +10){
-                offscreenEnemies.add(enemy);
+        try{
+            for (Enemy enemy : enemies){
+                if(enemy.move().y > Constants.SCREEN_HEIGHT +10){
+                    offscreenEnemies.add(enemy);
+                }
+                enemy.update((enemy.move()));
+                isGameOver(player, enemy);
             }
-            enemy.update((enemy.move()));
-            isGameOver(player, enemy);
+            for(Enemy enemy : offscreenEnemies){
+                enemies.remove((enemy));
+            }
+        }catch(Exception e){
+            System.out.println("ERROR: something went wrong");
         }
-        for(Enemy enemy : offscreenEnemies){
-            enemies.remove((enemy));
-        }
-        for(Bullet bullet : offscreenBullets){
-            bullets.remove(bullet);
-        }
+
+
+        offscreenBullets.clear();
+        offscreenEnemies.clear();
 
         cooldown --;
         enemyTimer--;
-
     }
 
     public void draw(){
         if(getHolder().getSurface().isValid()){
             Canvas canvas = getHolder().lockCanvas();
             canvas.drawColor(Color.rgb(10,10,44));
+            try{
+                for (Bullet bullet : bullets){
+                    bullet.draw(canvas);
+                }
+            }catch(Exception e){
+                System.out.println("ERROR: something went wrong");
+            }
+            try{
+                for(Enemy enemy : enemies){
+                    enemy.draw(canvas);
+                }
+            }catch(Exception e){
+                System.out.println("ERROR: something went wrong");
+            }
 
-            for (Bullet bullet : bullets){
-                bullet.draw(canvas);
-            }
-            for(Enemy enemy : enemies){
-                enemy.draw(canvas);
-            }
             player.draw(canvas);
             getHolder().unlockCanvasAndPost(canvas);
         }
-
     }
     private void sleep(){
         //cap at ~60 FPS
@@ -143,7 +156,6 @@ public class GameView extends SurfaceView implements Runnable{
             e.printStackTrace();
         }
     }
-
 
     public void resume(){
         isRunning = true;
@@ -158,7 +170,6 @@ public class GameView extends SurfaceView implements Runnable{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -170,18 +181,14 @@ public class GameView extends SurfaceView implements Runnable{
         return true;
     }
 
-
     private void newBullet(){
         Bullet bullet = new Bullet(player.move().x, player.move().y);
         bullets.add(bullet);
-        System.out.println(bullet.speed);
-
     }
 
     private void spawnEnemy(){
         if (enemyTimer <= 0){
-            Enemy enemy = new Enemy(4);
-
+            Enemy enemy = new Enemy(enemySpeed);
             enemies.add(enemy);
             if(maxEnemyTimer>18){
                 maxEnemyTimer--;
