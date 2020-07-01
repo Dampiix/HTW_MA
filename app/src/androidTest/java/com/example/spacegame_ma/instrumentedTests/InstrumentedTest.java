@@ -1,6 +1,7 @@
-package com.example.spacegame_ma;
+package com.example.spacegame_ma.instrumentedTests;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -10,6 +11,7 @@ import com.example.spacegame_ma.Entity.Bullet;
 import com.example.spacegame_ma.Entity.Enemy;
 import com.example.spacegame_ma.Entity.Player;
 import com.example.spacegame_ma.GameLogic.GameView;
+
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,9 +40,7 @@ public class InstrumentedTest {
         enemy.move().y = player.move().y;
         enemy.move().x = player.move().x;
 
-
         assertEquals(true , gameView.isGameOver(player,enemy));
-
     }
 
     @Test
@@ -54,7 +54,6 @@ public class InstrumentedTest {
 
         enemy.move().y = player.move().y;
         enemy.move().x = player.move().x + 100;
-
 
         assertEquals(false , gameView.isGameOver(player,enemy));
     }
@@ -74,8 +73,6 @@ public class InstrumentedTest {
         Bullet bullet = new Bullet(enemy.move().x, enemy.move().y);
 
         assertEquals(true,gameView.enemyHit(bullet, enemy));
-
-
     }
 
     @Test
@@ -94,4 +91,24 @@ public class InstrumentedTest {
 
         assertEquals(false,gameView.enemyHit(bullet, enemy));
     }
+
+    @Test
+    public void currentScoreIncreaseTest(){
+        Constants.SCREEN_HEIGHT = height;
+        Constants.SCREEN_WIDTH = width;
+        GameView gameView = new GameView(context);
+
+        Player player = new Player(gameView);
+        Enemy enemy = new Enemy(40);
+
+        enemy.move().y = player.move().y -200;
+        enemy.move().x = player.move().x;
+
+        Bullet bullet = new Bullet(enemy.move().x, enemy.move().y);
+        assertEquals(true, gameView.enemyHit(bullet, enemy));
+        assertEquals(1, gameView.getScore());
+    }
+
+
+
 }

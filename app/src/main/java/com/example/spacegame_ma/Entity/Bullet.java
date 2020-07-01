@@ -9,8 +9,8 @@ import android.graphics.Rect;
 public class Bullet implements Entity{
 
     int x,y;
-    int width = 50;
-    int height = 50;
+    public int width = 50;
+    public int height = 50;
     private int color;
     private Rect rect;
     public int speed = 1;
@@ -44,6 +44,7 @@ public class Bullet implements Entity{
         canvas.drawRect(rect, paint);
     }
 
+    @Override
     public void update(Point point) {
         float oldLeft = rect.left;
 

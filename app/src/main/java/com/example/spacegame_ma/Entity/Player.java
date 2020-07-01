@@ -48,7 +48,7 @@ public class Player implements Entity {
         canvas.drawRect(rect, paint);
     }
 
-
+    @Override
     public void update(Point point) {
         float oldLeft = rect.left;
 
@@ -67,6 +67,7 @@ public class Player implements Entity {
         }
     }
 
+    @Override
     public Point move(){
         if(current_time < Constants.INIT_TIME){
             current_time = Constants.INIT_TIME;

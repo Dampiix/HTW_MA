@@ -42,7 +42,7 @@ public class Enemy implements Entity {
         canvas.drawRect(rect, paint);
     }
 
-
+    @Override
     public void update(Point point) {
         float oldLeft = rect.left;
 
