@@ -41,10 +41,7 @@ public interface GameViewI {
      */
     void sleep();
 
-    /**
-     * checks if score is higher, saves if its a new highscore
-     */
-    void saveNewHighscore();
+
 
 
     /**

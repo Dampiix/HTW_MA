@@ -13,6 +13,7 @@ import com.example.spacegame_ma.Entity.Bullet;
 import com.example.spacegame_ma.Entity.Enemy;
 import com.example.spacegame_ma.Entity.Player;
 import com.example.spacegame_ma.Constants.Constants;
+import com.example.spacegame_ma.storage.LocalStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,14 +42,15 @@ public class GameView extends SurfaceView implements Runnable, GameViewI {
 
     private Random random;
 
-    private SharedPreferences pref;
+    private LocalStorage ls;
+
 
     public GameView(Context context) {
         super(context);
         init(context);
         spawnPlayer();
 
-        pref = context.getSharedPreferences("game", Context.MODE_PRIVATE);
+        ls = new LocalStorage(context);
 
         screenX = Constants.SCREEN_WIDTH;
         screenY = Constants.SCREEN_HEIGHT;
@@ -92,7 +94,9 @@ public class GameView extends SurfaceView implements Runnable, GameViewI {
 
         if(gameOver){
             isRunning = false;
-            saveNewHighscore();
+            if(ls.compareScore(score)){
+                ls.saveNewHighscore(score);
+            }
         }
 
         try{
@@ -145,15 +149,7 @@ public class GameView extends SurfaceView implements Runnable, GameViewI {
         enemyTimer--;
     }
 
-    @Override
-    public void saveNewHighscore() {
-        if (pref.getInt("highscore", 0) < score){
-            SharedPreferences.Editor editor = pref.edit();
-            editor.putInt("highscore", score);
-            editor.apply();
-        }
 
-    }
 
     //draw everything on
     @Override
